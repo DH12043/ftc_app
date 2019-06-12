@@ -1,11 +1,24 @@
-// Imports
+package org.firstinspires.ftc.teamcode;
 
-public class MecanumDrive extends OpMode {
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
 
-    private DcMotor LeftFront;
-    private DcMotor RightFront;
-    private DcMotor LeftBack;
-    private DcMotor RightBack;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
+
+@TeleOp
+public class MecanumDrive {
+/*
+    private DcMotor _leftFront;
+    private DcMotor _rightFront;
+    private DcMotor _leftBack;
+    private DcMotor _rightBack;
 
     private double yAxisValue = 0;
     private double xAxisValue = 0;
@@ -14,10 +27,10 @@ public class MecanumDrive extends OpMode {
     private double turnValue = 0;
 
     public void init() {
-        hardwareMap.DcMotor.get(“LeftFront”);
-        hardwareMap.DcMotor.get(“RightFront”);
-        hardwareMap.DcMotor.get(“LeftBack”);
-        hardwareMap.DcMotor.get(“RightBack”);
+        _leftFront = hardwareMap.dcMotor.get("LeftFront");
+        _rightFront = hardwareMap.dcMotor.get("RightFront");
+        hardwareMap.dcMotor.get("LeftBack");
+        hardwareMap.dcMotor.get("RightBack");
     }
 
     public void loop() {
@@ -32,17 +45,18 @@ public class MecanumDrive extends OpMode {
     }
 
     private void drive() {
-        FrontLeft.setPower(yAxisValue);
-        FrontRight.setPower(xAxisValue);
-        BackLeft.setPower(xAxisValue);
-        BackRight.setPower(yAxisValue);
-        /* for example, the point (0.2, 0.5) will slide right 2 feet for every 5 feet forward in the same time that (.3, .4) would slide right 3 feet for every 4 feet forward and the same time that (-.4, -1) would go left 4 feet and 10 feet back. */
+        LeftFront.setPower(yAxisValue);
+        RightFront.setPower(xAxisValue);
+        LeftBack.setPower(xAxisValue);
+        RightBack.setPower(yAxisValue);
+        // for example, the point (0.2, 0.5) will slide right 2 feet for every 5 feet forward in the same time that (.3, .4) would slide right 3 feet for every 4 feet forward and the same time that (-.4, -1) would go left 4 feet and 10 feet back.
     }
 
     private void turn() {
-        FrontLeft.setPower(turnValue);
-        FrontRight.setPower(turnValue);
-        BackLeft.setPower(turnValue);
-        BackRight.setPower(turnValue);
+        LeftFront.setPower(turnValue);
+        RightFront.setPower(turnValue);
+        LeftBack.setPower(turnValue);
+        RightBack.setPower(turnValue);
     }
+    */
 }
