@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 
-@TeleOp
 public class MecanumDrive {
 /*
     private DcMotor _leftFront;
