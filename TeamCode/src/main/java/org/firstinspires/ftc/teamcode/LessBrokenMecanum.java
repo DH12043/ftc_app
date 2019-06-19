@@ -23,13 +23,20 @@ public class LessBrokenMecanum extends OpMode {
     @Override
     public void loop() {
         drive();
+
+        telemetry.addData("leftStickX", gamepad1.left_stick_x);
+        telemetry.addData("leftStickY", gamepad1.left_stick_y);
+        telemetry.addData("_leftFrontDrive", (limit(gamepad1.left_stick_x - gamepad1.left_stick_y)));
+        telemetry.addData("_rightFrontDrive", (limit(gamepad1.left_stick_x + gamepad1.left_stick_y)));
+        telemetry.addData("_leftRearDrive", (limit(-gamepad1.left_stick_x - gamepad1.left_stick_y)));
+        telemetry.addData("_rightRearDrive", (limit(-gamepad1.left_stick_x + gamepad1.left_stick_y)));
     }
 
     private void drive() {
         _leftFrontDrive.setPower(limit(gamepad1.left_stick_x - gamepad1.left_stick_y));
         _rightFrontDrive.setPower(limit(gamepad1.left_stick_x + gamepad1.left_stick_y));
-        _leftRearDrive.setPower(limit(gamepad1.left_stick_x - gamepad1.left_stick_y));
-        _rightRearDrive.setPower(limit(gamepad1.left_stick_y + gamepad1.left_stick_y));
+        _leftRearDrive.setPower(limit(-gamepad1.left_stick_x - gamepad1.left_stick_y));
+        _rightRearDrive.setPower(limit(-gamepad1.left_stick_x + gamepad1.left_stick_y));
     }
 
     public double limit(double value) {
