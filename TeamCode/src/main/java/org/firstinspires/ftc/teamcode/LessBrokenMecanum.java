@@ -26,20 +26,41 @@ public class LessBrokenMecanum extends OpMode {
 
         telemetry.addData("leftStickX", gamepad1.left_stick_x);
         telemetry.addData("leftStickY", gamepad1.left_stick_y);
-        telemetry.addData("_leftFrontDrive", (limit(gamepad1.left_stick_x - gamepad1.left_stick_y)));
-        telemetry.addData("_rightFrontDrive", (limit(gamepad1.left_stick_x + gamepad1.left_stick_y)));
-        telemetry.addData("_leftRearDrive", (limit(-gamepad1.left_stick_x - gamepad1.left_stick_y)));
-        telemetry.addData("_rightRearDrive", (limit(-gamepad1.left_stick_x + gamepad1.left_stick_y)));
+        telemetry.addData("_leftFrontDrive", (getLeftFrontDriveValue()));
+        telemetry.addData("_rightFrontDrive", (getRightFrontDriveValue()));
+        telemetry.addData("_leftRearDrive", (getLeftRearDriveValue()));
+        telemetry.addData("_rightRearDrive", (getRightRearDriveValue()));
     }
 
     private void drive() {
-        _leftFrontDrive.setPower(limit(gamepad1.left_stick_x - gamepad1.left_stick_y));
-        _rightFrontDrive.setPower(limit(gamepad1.left_stick_x + gamepad1.left_stick_y));
-        _leftRearDrive.setPower(limit(-gamepad1.left_stick_x - gamepad1.left_stick_y));
-        _rightRearDrive.setPower(limit(-gamepad1.left_stick_x + gamepad1.left_stick_y));
+        _leftFrontDrive.setPower(getLeftFrontDriveValue()/scaleFactor());
+        _rightFrontDrive.setPower(getRightFrontDriveValue()/scaleFactor());
+        _leftRearDrive.setPower(getLeftRearDriveValue()/scaleFactor());
+        _rightRearDrive.setPower(getRightRearDriveValue()/scaleFactor());
     }
 
-    public double limit(double value) {
+    /*public double limit(double value) {
         return Math.max(-1.0, Math.min(value, 1.0));
+    }
+    */
+    
+    public double scaleFactor() {
+        return Math.max(Math.max(Math.abs(getRightFrontDriveValue()), Math.abs(getLeftFrontDriveValue())), Math.max( Math.abs(getRightRearDriveValue()), Math.abs(getLeftRearDriveValue())));
+    }
+
+    public double getLeftFrontDriveValue() {
+        return(gamepad1.left_stick_x - gamepad1.left_stick_y + gamepad1.right_stick_x);
+    }
+
+    public double getRightFrontDriveValue() {
+        return(gamepad1.left_stick_x + gamepad1.left_stick_y + gamepad1.right_stick_x);
+    }
+
+    public double getLeftRearDriveValue() {
+        return(-gamepad1.left_stick_x - gamepad1.left_stick_y + gamepad1.right_stick_x);
+    }
+
+    public double getRightRearDriveValue() {
+        return(-gamepad1.left_stick_x + gamepad1.left_stick_y + gamepad1.right_stick_x);
     }
 }
