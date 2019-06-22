@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-public class Encoders extends OpMode {
+public class IRDistance extends OpMode {
 
     public void init() {
 
