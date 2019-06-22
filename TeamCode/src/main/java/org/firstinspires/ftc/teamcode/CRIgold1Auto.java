@@ -183,9 +183,9 @@ public class CRIgold1Auto extends OpMode{
                 if (stageCounter == 16) {
                     stopAndResetEncoder();
                 }
-                if (stageCounter == 17) {
-                    turn(-16);
-                }
+                //if (stageCounter == 17) {
+                    //turn(-16);
+                //}
                 if (stageCounter == 18) {
                     MarkerServo.setPosition(.7);
                     stopAndResetEncoder();
@@ -280,9 +280,9 @@ public class CRIgold1Auto extends OpMode{
                 if (stageCounter == 24) {
                     stopAndResetEncoder();
                 }
-                if (stageCounter == 25) {
-                    turn(-16);
-                }
+                //if (stageCounter == 25) {
+                    //turn(-16);
+                //}
                 if (stageCounter == 26) {
                     MarkerServo.setPosition(.7);
                     stopAndResetEncoder();

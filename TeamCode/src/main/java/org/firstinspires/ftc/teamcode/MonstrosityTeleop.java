@@ -13,15 +13,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 @TeleOp
-public class PowerBotTeleop extends OpMode {
-    private DcMotor ShoulderMotor1;
-    private DcMotor RightDrive;
-    private DcMotor LeftDrive;
+public class MonstrosityTeleop extends OpMode {
+    private DcMotor ShoulderMotor;
+    private DcMotor FR;
+    private DcMotor FL;
+    private DcMotor BR;
+    private DcMotor BL;
     private DcMotor SpinnerMotor;
-    //private DcMotor HangingMotor;
+    private DcMotor HangingMotor;
 
     private Servo SorterServo;
-    private Servo ArmLock;
     private Servo MarkerServo;
 
 
@@ -30,7 +31,6 @@ public class PowerBotTeleop extends OpMode {
 
     View relativeLayout;
 
-    private int SorterState;
     private double shoulder;
     private int ShoulderOffset;
     private int armPosition = 0;
@@ -69,16 +69,19 @@ public class PowerBotTeleop extends OpMode {
 
     @Override
     public void init() {
-        ShoulderMotor1 = hardwareMap.dcMotor.get("ShoulderMotor1");
-        ShoulderMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        telemetry.addData("ShoulderMotor1", ShoulderMotor1.getCurrentPosition());
+        ShoulderMotor = hardwareMap.dcMotor.get("ShoulderMotor");
+        ShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        telemetry.addData("ShoulderMotor", ShoulderMotor.getCurrentPosition());
         telemetry.update();
+        HangingMotor = hardwareMap.dcMotor.get("HangingMotor");
+        HangingMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         SpinnerMotor = hardwareMap.dcMotor.get("SpinnerMotor");
         SorterServo = hardwareMap.servo.get("SorterServo");
-        ArmLock = hardwareMap.servo.get("ArmLock");
         MarkerServo = hardwareMap.servo.get("MarkerServo");
-        LeftDrive = hardwareMap.dcMotor.get("LeftDrive");
-        RightDrive = hardwareMap.dcMotor.get("RightDrive");
+        FR = hardwareMap.dcMotor.get("FR");
+        FL = hardwareMap.dcMotor.get("FL");
+        BR = hardwareMap.dcMotor.get("BR");
+        BL = hardwareMap.dcMotor.get("BL");
         SorterServo.setPosition(center);
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
         relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
@@ -110,8 +113,8 @@ public class PowerBotTeleop extends OpMode {
         if (!gamepad2.dpad_up && !gamepad1.dpad_up) {
             //Shoulder ------------------------------------------------------------------------------------------------------------------------------
             //Uses the Y button on Gamepad1 to determine if it should use the encoders
-            if (gamepad2.y == true) {
-                if (firstPressy == true) {
+            if (gamepad2.y) {
+                if (firstPressy) {
                     encoderEngaged = !encoderEngaged;
                     firstPressy = false;
                 }
@@ -120,13 +123,13 @@ public class PowerBotTeleop extends OpMode {
                 firstPressy = true;
             }
             //Reset the encoder position
-            if (gamepad2.x == true) {
-                ShoulderMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            if (gamepad2.x) {
+                ShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
             //Uses Encoder Positioning
-            if (encoderEngaged == true) {
+            if (encoderEngaged) {
                 if (gamepad1.right_trigger > .5) {
-                    if (firstPressRight_Trigger == true) {
+                    if (firstPressRight_Trigger) {
                         if (armPosition == 1) {
                             armPosition = 0;
                             scoring = false;
@@ -142,7 +145,7 @@ public class PowerBotTeleop extends OpMode {
                     firstPressRight_Trigger = true;
                 }
                 if (gamepad1.left_trigger > .5) {
-                    if (firstPressLeft_Trigger == true) {
+                    if (firstPressLeft_Trigger) {
                         if (armPosition == 2) {
                             armPosition = 0;
                         }
@@ -178,25 +181,25 @@ public class PowerBotTeleop extends OpMode {
                     shoulderPosition(hang);
                 }
 
-                if (gamepad2.dpad_left == true) {
+                if (gamepad2.dpad_left) {
                     ShoulderOffset = ShoulderOffset+3;
                 }
-                else if (gamepad2.dpad_right == true) {
+                else if (gamepad2.dpad_right) {
                     ShoulderOffset = ShoulderOffset-3;
                 }
             }
             //Uses Values from the Triggers on Gamepad1
             else {
-                ShoulderMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                ShoulderMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 shoulder = gamepad1.left_trigger-gamepad1.right_trigger;
-                ShoulderMotor1.setPower(shoulder);
+                ShoulderMotor.setPower(shoulder);
                 telemetry.addData("Power", shoulder);
             }
 
             //Sweeper-------------------------------------------------------------------------------------------------------------------------------
-            if (gamepad1.right_bumper == true) {
-                if (firstPressRight_Bumper == true) {
-                    if (sweeperEngaged == false) {
+            if (gamepad1.right_bumper) {
+                if (firstPressRight_Bumper) {
+                    if (!sweeperEngaged) {
                         SpinnerMotor.setPower(-1);
                         sweeperEngaged = true;
                     }
@@ -289,11 +292,11 @@ public class PowerBotTeleop extends OpMode {
                             .addData(" left is yellow", leftIsYellow);
 
                     if (leftIsYellow && rightIsYellow) {
-                        SorterServo.setPosition(open); // check Position in old teleop
+                        SorterServo.setPosition(open);
                         telemetry.addData("Yellow","Both");
                     }
                     else if(!leftIsYellow && rightIsYellow) {
-                        SorterServo.setPosition(right); // check old teleop
+                        SorterServo.setPosition(right);
                         telemetry.addData("Yellow","Right");
                     }
 
@@ -308,11 +311,11 @@ public class PowerBotTeleop extends OpMode {
                 }
                 else if (gamepad1.a) { // drop silver
                     if (!leftIsYellow && !rightIsYellow) {
-                        SorterServo.setPosition(open); // check Position in old teleop
+                        SorterServo.setPosition(open);
                         isScoringSilver = true;
                     }
                     else if(leftIsYellow && !rightIsYellow) {
-                        SorterServo.setPosition(right); // check old teleop
+                        SorterServo.setPosition(right);
                         isScoringSilver = true;
                     }
                     else if(!leftIsYellow && rightIsYellow) {
@@ -331,13 +334,13 @@ public class PowerBotTeleop extends OpMode {
                 }
             }
             else {
-                if (gamepad1.x == true) {
+                if (gamepad1.x) {
                     SorterServo.setPosition(right);
                 }
-                else if (gamepad1.y == true) {
+                else if (gamepad1.y) {
                     SorterServo.setPosition(open);
                 }
-                else if (gamepad1.b == true) {
+                else if (gamepad1.b) {
                     SorterServo.setPosition(left);
                 }
                 else {
@@ -348,19 +351,23 @@ public class PowerBotTeleop extends OpMode {
             //Drivetrain -----------------------------------------------------------------------------------------------------------------------------
             if(!scoring){
                 double rightSpeed = gamepad1.left_stick_y;
-                RightDrive.setPower(rightSpeed);
+                FR.setPower(rightSpeed);
+                BR.setPower(rightSpeed);
 
                 double leftSpeed = -gamepad1.right_stick_y;
-                LeftDrive.setPower(leftSpeed);
+                FL.setPower(leftSpeed);
+                BL.setPower(leftSpeed);
             }
             else{
                 double rightSpeed = -gamepad1.right_stick_y;
-                RightDrive.setPower(rightSpeed);
+                FR.setPower(rightSpeed);
+                BR.setPower(rightSpeed);
 
                 double leftSpeed = gamepad1.left_stick_y;
-                LeftDrive.setPower(leftSpeed);
+                FL.setPower(leftSpeed);
+                BL.setPower(leftSpeed);
             }
-            /*Hanging -------------------------------------------------------------------------------------------------------------
+            //Hanging -------------------------------------------------------------------------------------------------------------
             if (gamepad2.b) {
                 if (firstPressb) {
                     autoHangingEngaged = !autoHangingEngaged;
@@ -382,8 +389,9 @@ public class PowerBotTeleop extends OpMode {
             }
             else {
                 HangingMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                HangingMotor.setPower(gamepad2.right_stick_y);
-            }*/
+                HangingMotor.setPower(gamepad2.left_stick_y);
+            }
+            telemetry.addData("Auto Hanging", autoHangingEngaged);
             //MarkerServo ---------------------------------------------------------------------------------------------------------
             if (gamepad2.dpad_down) {
                 MarkerServo.setPosition(1);
@@ -396,9 +404,11 @@ public class PowerBotTeleop extends OpMode {
             }
         }
         else {
-            ShoulderMotor1.setPower(0);
-            LeftDrive.setPower(0);
-            RightDrive.setPower(0);
+            ShoulderMotor.setPower(0);
+            FL.setPower(0);
+            FR.setPower(0);
+            BL.setPower(0);
+            BR.setPower(0);
             SpinnerMotor.setPower(0);
             telemetry.addData("EMERGENCY STOP","ENGAGED");
         }
@@ -408,65 +418,65 @@ public class PowerBotTeleop extends OpMode {
         telemetry.addData("Encoder Engaged", encoderEngaged);
         telemetry.addData("Arm Position", armPosition);
         telemetry.addData("Shoulder Offset", ShoulderOffset);
-        telemetry.addData("ShoulderMotor1", ShoulderMotor1.getCurrentPosition());
+        telemetry.addData("ShoulderMotor", ShoulderMotor.getCurrentPosition());
         telemetry.update ();
     }//ends loop
 
     private void shoulderPosition(int position) {
-        ShoulderMotor1.setTargetPosition(position+ShoulderOffset);
-        ShoulderMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        double encoderPosition = (ShoulderMotor1.getCurrentPosition());
+        ShoulderMotor.setTargetPosition(position+ShoulderOffset);
+        ShoulderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        double encoderPosition = (ShoulderMotor.getCurrentPosition());
 
         if (armPosition == 0) {
             if (encoderPosition > (hover-200+ShoulderOffset) && encoderPosition <= (crater+ShoulderOffset)) {
-                ShoulderMotor1.setPower(downSlowSpeed);
+                ShoulderMotor.setPower(downSlowSpeed);
                 telemetry.addData("Shoulder Speed","Slow");
             }
             else if (encoderPosition > (centerArmPosition+ShoulderOffset) && encoderPosition <= (hover+ShoulderOffset)) {
-                ShoulderMotor1.setPower(downMediumSpeed);
+                ShoulderMotor.setPower(downMediumSpeed);
                 telemetry.addData("Shoulder Speed","Medium");
             }
             else {
-                ShoulderMotor1.setPower(fastSpeed);
+                ShoulderMotor.setPower(fastSpeed);
                 telemetry.addData("Shoulder Speed","Fast");
             }
         }
         else if (armPosition == 2) {
             if (encoderPosition > (hover-400+ShoulderOffset) && encoderPosition <= (hover+ShoulderOffset)) {
-                ShoulderMotor1.setPower(slowSpeed);
+                ShoulderMotor.setPower(slowSpeed);
                 telemetry.addData("Shoulder Speed","Slow");
             }
             else if (encoderPosition > (centerArmPosition+ShoulderOffset) && encoderPosition <= (hover-400+ShoulderOffset)) {
-                ShoulderMotor1.setPower(mediumSpeed);
+                ShoulderMotor.setPower(mediumSpeed);
                 telemetry.addData("Shoulder Speed","Medium");
             }
             else {
-                ShoulderMotor1.setPower(fastSpeed);
+                ShoulderMotor.setPower(fastSpeed);
                 telemetry.addData("Shoulder Speed","Fast");
             }
         }
         else if (armPosition == 1) {
             if (encoderPosition > (lander+ShoulderOffset) && encoderPosition <= (lander+200+ShoulderOffset)) {
-                ShoulderMotor1.setPower(slowSpeed);
+                ShoulderMotor.setPower(slowSpeed);
                 telemetry.addData("Shoulder Speed","Slow");
             }
             else if (encoderPosition > (lander+200+ShoulderOffset) && encoderPosition < (centerArmPosition+ShoulderOffset)) {
-                ShoulderMotor1.setPower(mediumSpeed);
+                ShoulderMotor.setPower(mediumSpeed);
                 telemetry.addData("Shoulder Speed","Medium");
             }
             else {
-                ShoulderMotor1.setPower(fastSpeed);
+                ShoulderMotor.setPower(fastSpeed);
                 telemetry.addData("Shoulder Speed","Fast");
             }
         }
         else if (armPosition == 3) {
-            ShoulderMotor1.setPower(fastSpeed);
+            ShoulderMotor.setPower(fastSpeed);
             telemetry.addData("Shoulder Speed","Fast");
         }
         else if (armPosition == 4) {
-            ShoulderMotor1.setPower(fastSpeed);
+            ShoulderMotor.setPower(fastSpeed);
             telemetry.addData("Shoulder Speed","Fast");
         }
-        telemetry.addData("Speed", ShoulderMotor1.getPower());
+        telemetry.addData("Speed", ShoulderMotor.getPower());
     }
 }//ends class

@@ -450,9 +450,42 @@ public class CRIsilverCraterScoringAuto extends OpMode{
             if (path == 2) {
                 // second route
                 if (stageCounter == 13) {
-                    driveAtSpeed(-4, DRIVE_SPEED_FAST);
+                    driveAndArm(-4, DRIVE_SPEED_FAST, centerArmPosition);
                 }
                 if (stageCounter == 14) {
+                    stopAndResetEncoder();
+                }
+                if (stageCounter == 15) {
+                    driveAtSpeed(14, DRIVE_SPEED_FAST);
+                }
+                if (stageCounter == 16) {
+                    stopAndResetEncoder();
+                }
+                if (stageCounter == 17) {
+                    turn(7);
+                }
+                if (stageCounter == 18) {
+                    stopAndResetEncoder();
+                }
+                if (stageCounter == 19) {
+                    driveAndArm(6, DRIVE_SPEED_FAST, hover);
+                    SpinnerMotor.setPower(-1);
+                    SorterServo.setPosition(open);
+                }
+                if (stageCounter == 20) {
+                    stopAndResetEncoder();
+                }
+                if (stageCounter == 21) {
+                    driveAndArm(-10, DRIVE_SPEED_FAST, crater);
+                }
+                if (stageCounter == 22) {
+                    stopAndResetEncoder();
+                    SorterServo.setPosition(center);
+                }
+                if (stageCounter == 23) {
+                    driveAndArm(16, DRIVE_SPEED_FAST, lander);
+                }
+                if (stageCounter == 24) {
                     stopAndResetEncoder();
                 }
             }
@@ -473,10 +506,26 @@ public class CRIsilverCraterScoringAuto extends OpMode{
                     stopAndResetEncoder();
                 }
                 if (stageCounter == 17) {
-                    driveAtSpeed(-24, DRIVE_SPEED_FAST);
+                    driveAndArm(-24, DRIVE_SPEED_FAST, centerArmPosition);
+                    SorterServo.setPosition(open);
                 }
                 if (stageCounter == 18) {
                     stopAndResetEncoder();
+                }
+                if (stageCounter == 19) {
+                    driveAtSpeed(25, DRIVE_SPEED_FAST);
+                }
+                if (stageCounter == 20) {
+                    stopAndResetEncoder();
+                }
+                if (stageCounter == 21) {
+                    turn(-8);
+                }
+                if (stageCounter == 22) {
+                    stopAndResetEncoder();
+                }
+                if (stageCounter== 23) {
+                    driveAndArm(6, DRIVE_SPEED_FAST, hover);
                 }
             }
             telemetry.addData("isSampleGold", isSampleGold);
