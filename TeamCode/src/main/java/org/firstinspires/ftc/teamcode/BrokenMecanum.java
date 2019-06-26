@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import java.lang.*;
 
-@TeleOp
-public class LessBrokenMecanum extends OpMode {
+
+public class BrokenMecanum extends OpMode {
 
     private DcMotor _leftFrontDrive;
     private DcMotor _rightFrontDrive;
@@ -49,7 +49,7 @@ public class LessBrokenMecanum extends OpMode {
         return Math.max(-1.0, Math.min(value, 1.0));
     }
     */
-    
+
     public double scaleFactor() {
         return Math.max
                 (Math.max(Math.abs(getRightFrontDriveValue()), Math.abs(getLeftFrontDriveValue())),
@@ -74,37 +74,37 @@ public class LessBrokenMecanum extends OpMode {
 
     public double leftFrontDrivePower() {
         if (scaleFactor() > 1) {
-            return(getLeftFrontDriveValue()/scaleFactor());
+            return(getLeftFrontDriveValue() / scaleFactor());
         }
         else {
-            return getLeftFrontDriveValue();
+            return (getLeftFrontDriveValue());
         }
     }
 
     public double rightFrontDrivePower() {
         if (scaleFactor() > 1) {
-            return(getRightFrontDriveValue()/scaleFactor());
+            return (getRightFrontDriveValue() / scaleFactor());
         }
         else {
-            return getRightFrontDriveValue();
+            return (getRightFrontDriveValue());
         }
     }
 
     public double leftRearDrivePower() {
         if (scaleFactor() > 1) {
-            return(getLeftRearDriveValue()/scaleFactor());
+            return (getLeftRearDriveValue() / scaleFactor());
         }
         else {
-            return getLeftRearDriveValue();
+            return (getLeftRearDriveValue());
         }
     }
 
     public double rightRearDrivePower() {
         if (scaleFactor() > 1) {
-            return(getRightRearDriveValue()/scaleFactor());
+            return (getRightRearDriveValue() / scaleFactor());
         }
         else {
-            return getRightRearDriveValue();
+            return (rightRearDrivePower());
         }
     }
 }
