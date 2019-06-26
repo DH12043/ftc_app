@@ -23,10 +23,8 @@ public class MonstrositySampleTest extends OpMode{
 
     private Servo SorterServo;
     private Servo MarkerServo;
-    private Servo RightSensorServo;
     private Servo RightSampleServo;
     private Servo LeftSampleServo;
-    private Servo LeftSampleVerticalServo;
 
     NormalizedColorSensor colorSensorLeft;
     NormalizedColorSensor colorSensorRight;
@@ -98,10 +96,8 @@ public class MonstrositySampleTest extends OpMode{
         HangingMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         SorterServo = hardwareMap.servo.get("SorterServo");
         MarkerServo = hardwareMap.servo.get("MarkerServo");
-        RightSensorServo = hardwareMap.servo.get("RightSensorServo");
         RightSampleServo = hardwareMap.servo.get("RightSampleServo");
         LeftSampleServo = hardwareMap.servo.get("LeftSampleServo");
-        LeftSampleVerticalServo = hardwareMap.servo.get("LeftSampleVerticalServo");
 
         FR = hardwareMap.dcMotor.get("FR");
         FL = hardwareMap.dcMotor.get("FL");
@@ -125,11 +121,8 @@ public class MonstrositySampleTest extends OpMode{
 
         SorterServo.setPosition(.5);
         MarkerServo.setPosition(.1);
-        RightSensorServo.setPosition(.1);
-        LeftSampleVerticalServo.setPosition(.7);
-        LeftSampleServo.setPosition(0);
-        RightSampleServo.setPosition(1);
-
+        RightSampleServo.setPosition(.1);
+        LeftSampleServo.setPosition(.7);
 
         if (colorSensorLeft instanceof SwitchableLight) {
             ((SwitchableLight)colorSensorLeft).enableLight(true);
@@ -169,8 +162,8 @@ public class MonstrositySampleTest extends OpMode{
             }
             if (stageCounter == 2) {
                 driveAtSpeed(-19, DRIVE_SPEED_FAST);
-                RightSensorServo.setPosition(.7);
-                LeftSampleVerticalServo.setPosition(.1);
+                RightSampleServo.setPosition(.7);
+                LeftSampleServo.setPosition(.1);
             }
             if (stageCounter == 3) {
                 stopAndResetEncoder();
@@ -182,221 +175,35 @@ public class MonstrositySampleTest extends OpMode{
                 stopAndResetEncoder();
             }
             if (path == 1) {
-                // if mineral is in the center
                 if (stageCounter == 6) {
-                    RightSensorServo.setPosition(.1);
-                    LeftSampleVerticalServo.setPosition(.7);
+                    RightSampleServo.setPosition(.1);
+                    LeftSampleServo.setPosition(.7);
                     driveAtSpeed(-4, DRIVE_SPEED_FAST);
                 }
                 if (stageCounter == 7) {
                     stopAndResetEncoder();
                 }
-                if (stageCounter == 8) {
-                    shoulderPosition(centerArmPosition);
-                    SpinnerMotor.setPower(-1);
-                    SorterServo.setPosition(open);
-                }
-                if (stageCounter == 9) {
-                    driveAndArm(20, DRIVE_SPEED_FAST, crater);
-                }
-                if (stageCounter == 10) {
-                    stopAndResetEncoder();
-                }
-                if (stageCounter == 11) {
-                    driveAtSpeed(-18, DRIVE_SPEED_FAST);
-
-                    if (FL.getCurrentPosition() < 800) {
-                        SorterServo.setPosition(center);
-                    }
-                }
-                if (stageCounter == 12) {
-                    stopAndResetEncoder();
-                }
-                if (stageCounter == 13) {
-                    SorterServo.setPosition(center);
-                    driveAndArm(10, DRIVE_SPEED_FAST, lander);
-                }
-                if (stageCounter == 14) {
-                    stopAndResetEncoder();
-                }
-                if (stageCounter == 15) {
-                    if (!leftIsYellow && !rightIsYellow) {
-                        SorterServo.setPosition(open); // check Position in old teleop
-                        isScoringSilver = true;
-                    }
-                    else if(leftIsYellow && !rightIsYellow) {
-                        SorterServo.setPosition(right); // check old teleop
-                        isScoringSilver = true;
-                    }
-                    else if(!leftIsYellow && rightIsYellow) {
-                        SorterServo.setPosition(left);
-                        isScoringSilver = true;
-                    }
-                    else {
-                        SorterServo.setPosition(center);
-                    }
-                    delay(1);
-                }
-                if (stageCounter == 16) {
-                    if (leftIsYellow || rightIsYellow) {
-                        scoringGold = true;
-                    }
-                    else {
-                        scoringGold = false;
-                    }
-                    stageCounter++;
-                }
-                if (scoringGold) {
-                    if (stageCounter == 17) {
-                        driveOneWheel(10, 0);
-                    }
-                    if (stageCounter == 18) {
-                        stopAndResetEncoder();
-                    }
-                    if (stageCounter == 19) {
-                        if (leftIsYellow && rightIsYellow) {
-                            SorterServo.setPosition(open); // check Position in old teleop
-                            telemetry.addData("Yellow","Both");
-                        }
-                        else if(!leftIsYellow && rightIsYellow) {
-                            SorterServo.setPosition(right); // check old teleop
-                            telemetry.addData("Yellow","Right");
-                        }
-
-                        else if(leftIsYellow && !rightIsYellow) {
-                            SorterServo.setPosition(left);
-                            telemetry.addData("Yellow","Left");
-                        }
-                        else {
-                            SorterServo.setPosition(center);
-                            telemetry.addData("Yellow","Neither");
-                        }
-                        delay(1);
-                    }
-                    if (stageCounter == 20) {
-                        driveOneWheel(-10, 0);
-                    }
-                    if (stageCounter == 21) {
-                        stopAndResetEncoder();
-                    }
-                }
-                else {
-                    if (stageCounter == 17) {
-                        stageCounter = 22;
-                    }
-                }
-                if (stageCounter == 22) {
-                    driveAndArm(9, DRIVE_SPEED_FAST, crater);
-                    shoulderPosition(crater);
-                    SorterServo.setPosition(open);
-                }
-                if (stageCounter == 23) {
-                    stopAndResetEncoder();
-                }
-                if (stageCounter == 24) {
-                    driveAtSpeed(-14, DRIVE_SPEED_FAST);
-
-                    if (FL.getCurrentPosition() < 600) {
-                        SorterServo.setPosition(center);
-                    }
-                }
-                if (stageCounter == 25) {
-                    stopAndResetEncoder();
-                }
-                if (stageCounter == 26) {
-                    SorterServo.setPosition(center);
-                    driveAndArm(13, DRIVE_SPEED_FAST, lander);
-                }
-                if (stageCounter == 27) {
-                    stopAndResetEncoder();
-                }
-                if (stageCounter == 28) {
-                    if (!leftIsYellow && !rightIsYellow) {
-                        SorterServo.setPosition(open); // check Position in old teleop
-                        isScoringSilver = true;
-                    }
-                    else if(leftIsYellow && !rightIsYellow) {
-                        SorterServo.setPosition(right); // check old teleop
-                        isScoringSilver = true;
-                    }
-                    else if(!leftIsYellow && rightIsYellow) {
-                        SorterServo.setPosition(left);
-                        isScoringSilver = true;
-                    }
-                    else {
-                        SorterServo.setPosition(center);
-                    }
-                    delay(1);
-                }
-                if (stageCounter == 29) {
-                    if (leftIsYellow || rightIsYellow) {
-                        scoringGold = true;
-                    }
-                    else {
-                        scoringGold = false;
-                    }
-                    stageCounter++;
-                }
-                if (scoringGold) {
-                    if (stageCounter == 30) {
-                        driveOneWheel(10, 0);
-                    }
-                    if (stageCounter == 31) {
-                        stopAndResetEncoder();
-                    }
-                    if (stageCounter == 32) {
-                        if (leftIsYellow && rightIsYellow) {
-                            SorterServo.setPosition(open); // check Position in old teleop
-                            telemetry.addData("Yellow","Both");
-                        }
-                        else if(!leftIsYellow && rightIsYellow) {
-                            SorterServo.setPosition(right); // check old teleop
-                            telemetry.addData("Yellow","Right");
-                        }
-
-                        else if(leftIsYellow && !rightIsYellow) {
-                            SorterServo.setPosition(left);
-                            telemetry.addData("Yellow","Left");
-                        }
-                        else {
-                            SorterServo.setPosition(center);
-                            telemetry.addData("Yellow","Neither");
-                        }
-                        delay(1);
-                    }
-                    if (stageCounter == 33) {
-                        driveOneWheel(-10, 0);
-                    }
-                    if (stageCounter == 34) {
-                        stopAndResetEncoder();
-                    }
-                }
-                else {
-                    if (stageCounter == 30) {
-                        stageCounter = 35;
-                    }
-                }
-                if (stageCounter == 35) {
-                    shoulderPosition(crater);
-                    SorterServo.setPosition(open);
-                }
-                if (stageCounter == 36) {
-                    driveAtSpeed(-13, DRIVE_SPEED_FAST);
-                }
-                if (stageCounter == 37) {
-                    stopAndResetEncoder();
-                }
             }
             if (path == 2) {
                 if (stageCounter == 6) {
-                    RightSampleServo.setPosition(.5);
-                    LeftSampleVerticalServo.setPosition(.5);
+                    turn(6);
+                }
+                if (stageCounter == 7) {
+                    turn(0);
+                    RightSampleServo.setPosition(.1);
+                    LeftSampleServo.setPosition(.7);
                 }
             }
             if (path == 3) {
-
+                if (stageCounter == 6) {
+                    turn(-6);
+                }
+                if (stageCounter == 7) {
+                    turn(0);
+                    RightSampleServo.setPosition(.1);
+                    LeftSampleServo.setPosition(.7);
+                }
             }
-            telemetry.addData("centerIsGold", centerIsGold);
             telemetry.addData("Path", path);
             telemetry.addData("StageCounter",stageCounter);
             telemetry.addData("FR",FR.getCurrentPosition());
