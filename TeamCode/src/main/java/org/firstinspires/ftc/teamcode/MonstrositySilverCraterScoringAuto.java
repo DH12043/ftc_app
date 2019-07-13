@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 @Autonomous
 
-public class MonstrositySampleTest extends OpMode{
+public class MonstrositySilverCraterScoringAuto extends OpMode{
     private DcMotor ShoulderMotor;
     private DcMotor FR;
     private DcMotor FL;
@@ -65,7 +65,7 @@ public class MonstrositySampleTest extends OpMode{
     private double right = 1;
     private double open = 0;
 
-    static final int pi = 33842916;
+    static final int pi = 33842916/6;
     //static final int countsPerMotorRev = 1120;
     static final int distancePerRotation = 4 * 1120 * pi;
 
@@ -80,8 +80,8 @@ public class MonstrositySampleTest extends OpMode{
 
     private int stageCounter = 0;
 
-    private static final double DRIVE_SPEED_FAST = 1;
-    private static final double DRIVE_SPEED_SLOW = 0.25;
+    private static final double DRIVE_SPEED_FAST = .5;
+    private static final double DRIVE_SPEED_SLOW = 0.3;
 
     private boolean rightIsYellow;
     private boolean leftIsYellow;
@@ -130,6 +130,8 @@ public class MonstrositySampleTest extends OpMode{
         if (colorSensorRight instanceof SwitchableLight) {
             ((SwitchableLight) colorSensorRight).enableLight(true);
         }
+
+        stageCounter = 0;
     }
 
     public void loop() {
@@ -141,21 +143,44 @@ public class MonstrositySampleTest extends OpMode{
         telemetry.addData("Current Time", currentTime);
         telemetry.addData("Start Time",startTime);
 
+
+//        HangingMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
         if (firstRun) {
             startTime = getRuntime();
-            stopAndResetEncoder();
+//            stopAndResetEncoder();
+            FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             ShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             HangingMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            HangingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             currentTime = getRuntime();
             firstRun = false;
+
+            // Old code for getting landing working
+//            HangingMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            HangingMotor.setPower(-1);
+//            HangingMotor.setTargetPosition(3654);
+//            if (HangingMotor.getCurrentPosition() == 3654) {
+//                stageCounter++;
+//            }
+//            else {
+//                stageCounter = 0;
+//            }
+//            HangingMotor.setTargetPosition(-3654);
+//            HangingMotor.setPower(-1);
+
         }
         else {
             if (stageCounter == 0) {
-                HangingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                HangingMotor.setPower(1);
-                HangingMotor.setTargetPosition(3654);
-                if (HangingMotor.getCurrentPosition() == 3654) {
+                HangingMotor.setTargetPosition(-3650);
+                HangingMotor.setPower(-1);
+                if (HangingMotor.getCurrentPosition() <= -3640) {
                     stageCounter++;
+                    HangingMotor.setPower(0);
                 }
                 else {
                     stageCounter = 0;
@@ -165,27 +190,27 @@ public class MonstrositySampleTest extends OpMode{
                 stopAndResetEncoder();
             }
             if (stageCounter == 2) {
-                driveAtSpeed(12, DRIVE_SPEED_FAST);
-                RightSampleServo.setPosition(.75);
-                LeftSampleServo.setPosition(.1);
+                driveAtSpeed(-10, DRIVE_SPEED_FAST);
             }
             if (stageCounter == 3) {
                 stopAndResetEncoder();
             }
             if (stageCounter == 4) {
-                turn(16);
+                turn(26);
             }
             if (stageCounter == 5) {
                 stopAndResetEncoder();
             }
             if (stageCounter == 6) {
-                driveAtSpeed(-6, DRIVE_SPEED_FAST);
+                driveAtSpeed(13, DRIVE_SPEED_FAST);
+                RightSampleServo.setPosition(.8);
+                LeftSampleServo.setPosition(.05);
             }
             if (stageCounter == 7) {
                 stopAndResetEncoder();
             }
             if (stageCounter == 8) {
-                driveAtSpeed(-3, DRIVE_SPEED_SLOW);
+                driveAtSpeed(4, DRIVE_SPEED_SLOW);
             }
             if (stageCounter == 9) {
                 stopAndResetEncoder();
@@ -194,15 +219,210 @@ public class MonstrositySampleTest extends OpMode{
                 if (stageCounter == 10) {
                     RightSampleServo.setPosition(.1);
                     LeftSampleServo.setPosition(.7);
-                    driveAtSpeed(-4, DRIVE_SPEED_FAST);
+                    driveAtSpeed(4, DRIVE_SPEED_FAST);
                 }
                 if (stageCounter == 11) {
+                    stopAndResetEncoder();
+                }
+                if (stageCounter == 12) {
+                    shoulderPosition(centerArmPosition);
+                    SpinnerMotor.setPower(-1);
+                    SorterServo.setPosition(open);
+                }
+                if (stageCounter == 13) {
+                    driveAndArm(20, DRIVE_SPEED_FAST, crater);
+                }
+                if (stageCounter == 14) {
+                    stopAndResetEncoder();
+                }
+                if (stageCounter == 15) {
+                    driveAtSpeed(-18, DRIVE_SPEED_FAST);
+
+                    if (FL.getCurrentPosition() < 800) {
+                        SorterServo.setPosition(center);
+                    }
+                }
+                if (stageCounter == 16) {
+                    stopAndResetEncoder();
+                }
+                if (stageCounter == 17) {
+                    SorterServo.setPosition(center);
+                    driveAndArm(10, DRIVE_SPEED_FAST, lander);
+                }
+                if (stageCounter == 18) {
+                    stopAndResetEncoder();
+                }
+                if (stageCounter == 19) {
+                    if (!leftIsYellow && !rightIsYellow) {
+                        SorterServo.setPosition(open); // check Position in old teleop
+                        isScoringSilver = true;
+                    }
+                    else if(leftIsYellow && !rightIsYellow) {
+                        SorterServo.setPosition(right); // check old teleop
+                        isScoringSilver = true;
+                    }
+                    else if(!leftIsYellow && rightIsYellow) {
+                        SorterServo.setPosition(left);
+                        isScoringSilver = true;
+                    }
+                    else {
+                        SorterServo.setPosition(center);
+                    }
+                    delay(1);
+                }
+                if (stageCounter == 20) {
+                    if (leftIsYellow || rightIsYellow) {
+                        scoringGold = true;
+                    }
+                    else {
+                        scoringGold = false;
+                    }
+                    stageCounter++;
+                }
+                if (scoringGold) {
+                    if (stageCounter == 21) {
+                        driveOneWheel(10, 0);
+                    }
+                    if (stageCounter == 22) {
+                        stopAndResetEncoder();
+                    }
+                    if (stageCounter == 23) {
+                        if (leftIsYellow && rightIsYellow) {
+                            SorterServo.setPosition(open); // check Position in old teleop
+                            telemetry.addData("Yellow","Both");
+                        }
+                        else if(!leftIsYellow && rightIsYellow) {
+                            SorterServo.setPosition(right); // check old teleop
+                            telemetry.addData("Yellow","Right");
+                        }
+
+                        else if(leftIsYellow && !rightIsYellow) {
+                            SorterServo.setPosition(left);
+                            telemetry.addData("Yellow","Left");
+                        }
+                        else {
+                            SorterServo.setPosition(center);
+                            telemetry.addData("Yellow","Neither");
+                        }
+                        delay(1);
+                    }
+                    if (stageCounter == 24) {
+                        driveOneWheel(-10, 0);
+                    }
+                    if (stageCounter == 25) {
+                        stopAndResetEncoder();
+                    }
+                }
+                else {
+                    if (stageCounter == 21) {
+                        stageCounter = 26;
+                    }
+                }
+                if (stageCounter == 26) {
+                    driveAndArm(9, DRIVE_SPEED_FAST, crater);
+                    shoulderPosition(crater);
+                    SorterServo.setPosition(open);
+                }
+                if (stageCounter == 27) {
+                    stopAndResetEncoder();
+                }
+                if (stageCounter == 28) {
+                    driveAtSpeed(-14, DRIVE_SPEED_FAST);
+
+                    if (FL.getCurrentPosition() < 600) {
+                        SorterServo.setPosition(center);
+                    }
+                }
+                if (stageCounter == 29) {
+                    stopAndResetEncoder();
+                }
+                if (stageCounter == 30) {
+                    SorterServo.setPosition(center);
+                    driveAndArm(13, DRIVE_SPEED_FAST, lander);
+                }
+                if (stageCounter == 31) {
+                    stopAndResetEncoder();
+                }
+                if (stageCounter == 32) {
+                    if (!leftIsYellow && !rightIsYellow) {
+                        SorterServo.setPosition(open); // check Position in old teleop
+                        isScoringSilver = true;
+                    }
+                    else if(leftIsYellow && !rightIsYellow) {
+                        SorterServo.setPosition(right); // check old teleop
+                        isScoringSilver = true;
+                    }
+                    else if(!leftIsYellow && rightIsYellow) {
+                        SorterServo.setPosition(left);
+                        isScoringSilver = true;
+                    }
+                    else {
+                        SorterServo.setPosition(center);
+                    }
+                    delay(1);
+                }
+                if (stageCounter == 33) {
+                    if (leftIsYellow || rightIsYellow) {
+                        scoringGold = true;
+                    }
+                    else {
+                        scoringGold = false;
+                    }
+                    stageCounter++;
+                }
+                if (scoringGold) {
+                    if (stageCounter == 34) {
+                        driveOneWheel(10, 0);
+                    }
+                    if (stageCounter == 35) {
+                        stopAndResetEncoder();
+                    }
+                    if (stageCounter == 36) {
+                        if (leftIsYellow && rightIsYellow) {
+                            SorterServo.setPosition(open); // check Position in old teleop
+                            telemetry.addData("Yellow","Both");
+                        }
+                        else if(!leftIsYellow && rightIsYellow) {
+                            SorterServo.setPosition(right); // check old teleop
+                            telemetry.addData("Yellow","Right");
+                        }
+
+                        else if(leftIsYellow && !rightIsYellow) {
+                            SorterServo.setPosition(left);
+                            telemetry.addData("Yellow","Left");
+                        }
+                        else {
+                            SorterServo.setPosition(center);
+                            telemetry.addData("Yellow","Neither");
+                        }
+                        delay(1);
+                    }
+                    if (stageCounter == 37) {
+                        driveOneWheel(-10, 0);
+                    }
+                    if (stageCounter == 38) {
+                        stopAndResetEncoder();
+                    }
+                }
+                else {
+                    if (stageCounter == 34) {
+                        stageCounter = 39;
+                    }
+                }
+                if (stageCounter == 39) {
+                    shoulderPosition(crater);
+                    SorterServo.setPosition(open);
+                }
+                if (stageCounter == 40) {
+                    driveAtSpeed(-13, DRIVE_SPEED_FAST);
+                }
+                if (stageCounter == 41) {
                     stopAndResetEncoder();
                 }
             }
             if (path == 2) {
                 if (stageCounter == 10) {
-                    turn(6);
+                    turn(-2);
                 }
                 if (stageCounter == 11) {
                     turn(0);
@@ -212,7 +432,7 @@ public class MonstrositySampleTest extends OpMode{
             }
             if (path == 3) {
                 if (stageCounter == 10) {
-                    turn(-6);
+                    turn(2);
                 }
                 if (stageCounter == 11) {
                     turn(0);
@@ -227,6 +447,7 @@ public class MonstrositySampleTest extends OpMode{
             telemetry.addData("BR",BR.getCurrentPosition());
             telemetry.addData("BL",BL.getCurrentPosition());
             telemetry.addData("HangingMotor",HangingMotor.getCurrentPosition());
+            telemetry.addData("HangingMotor Power",HangingMotor.getPower());
             telemetry.update();
         }
     }
@@ -409,31 +630,32 @@ public class MonstrositySampleTest extends OpMode{
     }
 
     private void turn(int turningDistance) {
-        FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        double turnPower = .5;
+        //FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         int finalTurningDistance = Math.round(turningDistance * (distancePerRotation / 10000000));
-        FR.setTargetPosition(finalTurningDistance);
-        FL.setTargetPosition(finalTurningDistance);
+        //FR.setTargetPosition(finalTurningDistance);
+        //FL.setTargetPosition(finalTurningDistance);
         BR.setTargetPosition(finalTurningDistance);
         BL.setTargetPosition(finalTurningDistance);
         telemetry.addData("Total Counts Necessary", finalTurningDistance);
-        FR.setPower(1);
-        FL.setPower(1);
-        BR.setPower(1);
-        BL.setPower(1);
-        int FRdrivePosition = FR.getCurrentPosition();
-        int FLdrivePosition = FL.getCurrentPosition();
+        //FR.setPower(turnPower);
+        //FL.setPower(turnPower);
+        BR.setPower(turnPower);
+        BL.setPower(turnPower);
+        //int FRdrivePosition = FR.getCurrentPosition();
+        //int FLdrivePosition = FL.getCurrentPosition();
         int BRdrivePosition = BR.getCurrentPosition();
         int BLdrivePosition = BL.getCurrentPosition();
 
-        FRdriveCorrect = isPositionCorrect(finalTurningDistance, FRdrivePosition);
-        FLdriveCorrect = isPositionCorrect(finalTurningDistance, FLdrivePosition);
+        //FRdriveCorrect = isPositionCorrect(finalTurningDistance, FRdrivePosition);
+        //FLdriveCorrect = isPositionCorrect(finalTurningDistance, FLdrivePosition);
         BRdriveCorrect = isPositionCorrect(finalTurningDistance, BRdrivePosition);
         BLdriveCorrect = isPositionCorrect(finalTurningDistance, BLdrivePosition);
 
-        if (FRdriveCorrect && FLdriveCorrect && BRdriveCorrect && BLdriveCorrect) {
+        if (BRdriveCorrect && BLdriveCorrect) {
             stageCounter++;
         }
     }
@@ -618,5 +840,9 @@ public class MonstrositySampleTest extends OpMode{
         telemetry.addLine("Saw yellow:  ")
                 .addData(" left is yellow", leftIsYellow)
                 .addData("goldness", "%.3f", goldnessLeft);
+    }
+
+    private void land() {
+
     }
 }

@@ -24,6 +24,8 @@ public class MonstrosityTeleop extends OpMode {
 
     private Servo SorterServo;
     private Servo MarkerServo;
+    private Servo RightSampleServo;
+    private Servo LeftSampleServo;
 
 
     NormalizedColorSensor colorSensorLeft;
@@ -50,11 +52,11 @@ public class MonstrosityTeleop extends OpMode {
     private boolean colorSensorsEngaged = true;
     private boolean autoHangingEngaged = false;
     float[] hsvValues = new float[3];
-    private int centerArmPosition = -2150;
-    private int crater = 30;
-    private int hover = -400;
-    private int lander = -3100;
-    private int hang = -4800;
+    private int centerArmPosition = -3050;
+    private int crater = (0);
+    private int hover = (-600);
+    private int lander = (-4400);
+    private int hang = (-7200);
     private double fastSpeed = 1;
     private double mediumSpeed = .6;
     private double slowSpeed = .1;
@@ -78,11 +80,16 @@ public class MonstrosityTeleop extends OpMode {
         SpinnerMotor = hardwareMap.dcMotor.get("SpinnerMotor");
         SorterServo = hardwareMap.servo.get("SorterServo");
         MarkerServo = hardwareMap.servo.get("MarkerServo");
+        RightSampleServo = hardwareMap.servo.get("RightSampleServo");
+        LeftSampleServo = hardwareMap.servo.get("LeftSampleServo");
         FR = hardwareMap.dcMotor.get("FR");
         FL = hardwareMap.dcMotor.get("FL");
         BR = hardwareMap.dcMotor.get("BR");
         BL = hardwareMap.dcMotor.get("BL");
         SorterServo.setPosition(center);
+        MarkerServo.setPosition(.1);
+        RightSampleServo.setPosition(.1);
+        LeftSampleServo.setPosition(.7);
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
         relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
 
@@ -349,7 +356,8 @@ public class MonstrosityTeleop extends OpMode {
             }
 
             //Drivetrain -----------------------------------------------------------------------------------------------------------------------------
-            if(!scoring){
+            drive();
+            /*if(!scoring){
                 double rightSpeed = gamepad1.left_stick_y;
                 FR.setPower(rightSpeed);
                 BR.setPower(rightSpeed);
@@ -366,7 +374,7 @@ public class MonstrosityTeleop extends OpMode {
                 double leftSpeed = gamepad1.left_stick_y;
                 FL.setPower(leftSpeed);
                 BL.setPower(leftSpeed);
-            }
+            }*/
             //Hanging -------------------------------------------------------------------------------------------------------------
             if (gamepad2.b) {
                 if (firstPressb) {
@@ -397,7 +405,7 @@ public class MonstrosityTeleop extends OpMode {
                 MarkerServo.setPosition(1);
             }
             else {
-                MarkerServo.setPosition(0);
+                MarkerServo.setPosition(.25);
             }
             if (gamepad2.left_stick_y < -.5) {
                 ShoulderOffset = 150;
@@ -410,6 +418,7 @@ public class MonstrosityTeleop extends OpMode {
             BL.setPower(0);
             BR.setPower(0);
             SpinnerMotor.setPower(0);
+            HangingMotor.setPower(0);
             telemetry.addData("EMERGENCY STOP","ENGAGED");
         }
         //Telemetry -----------------------------------------------------------------------------------------------------------------------------
@@ -478,5 +487,77 @@ public class MonstrosityTeleop extends OpMode {
             telemetry.addData("Shoulder Speed","Fast");
         }
         telemetry.addData("Speed", ShoulderMotor.getPower());
+    }
+    private void drive() {
+        if (scoring) {
+            FL.setPower(rightRearDrivePower());
+            FR.setPower(leftRearDrivePower());
+            BL.setPower(rightFrontDrivePower());
+            BR.setPower(leftFrontDrivePower());
+        }
+        else{
+            FL.setPower(leftFrontDrivePower());
+            FR.setPower(rightFrontDrivePower());
+            BL.setPower(leftRearDrivePower());
+            BR.setPower(rightRearDrivePower());
+        }
+    }
+
+    public double scaleFactor() {
+        return Math.max
+                (Math.max(Math.abs(getRightFrontDriveValue()), Math.abs(getLeftFrontDriveValue())),
+                        Math.max( Math.abs(getRightRearDriveValue()), Math.abs(getLeftRearDriveValue())));
+    }
+
+    public double getLeftFrontDriveValue() {
+        return(-gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
+    }
+
+    public double getRightFrontDriveValue() {
+        return(gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
+    }
+
+    public double getLeftRearDriveValue() {
+        return(-gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x);
+    }
+
+    public double getRightRearDriveValue() {
+        return(gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x);
+    }
+
+    public double leftFrontDrivePower() {
+        if (scaleFactor() > 1) {
+            return(getLeftFrontDriveValue()/scaleFactor());
+        }
+        else {
+            return getLeftFrontDriveValue();
+        }
+    }
+
+    public double rightFrontDrivePower() {
+        if (scaleFactor() > 1) {
+            return(getRightFrontDriveValue()/scaleFactor());
+        }
+        else {
+            return getRightFrontDriveValue();
+        }
+    }
+
+    public double leftRearDrivePower() {
+        if (scaleFactor() > 1) {
+            return(getLeftRearDriveValue()/scaleFactor());
+        }
+        else {
+            return getLeftRearDriveValue();
+        }
+    }
+
+    public double rightRearDrivePower() {
+        if (scaleFactor() > 1) {
+            return(getRightRearDriveValue()/scaleFactor());
+        }
+        else {
+            return getRightRearDriveValue();
+        }
     }
 }//ends class
