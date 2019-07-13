@@ -65,7 +65,7 @@ public class MonstrositySampleTest extends OpMode{
     private double right = 1;
     private double open = 0;
 
-    static final int pi = 45123889*3;
+    static final int pi = 67685833;
     //static final int countsPerMotorRev = 1120;
     static final int distancePerRotation = 4 * 1120 * pi;
 
@@ -145,6 +145,7 @@ public class MonstrositySampleTest extends OpMode{
             startTime = getRuntime();
             stopAndResetEncoder();
             ShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            HangingMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             currentTime = getRuntime();
             firstRun = false;
         }
@@ -156,12 +157,15 @@ public class MonstrositySampleTest extends OpMode{
                 if (HangingMotor.getCurrentPosition() == 3654) {
                     stageCounter++;
                 }
+                else {
+                    stageCounter = 0;
+                }
             }
             if (stageCounter == 1) {
                 stopAndResetEncoder();
             }
             if (stageCounter == 2) {
-                driveAtSpeed(-19, DRIVE_SPEED_FAST);
+                driveAtSpeed(12, DRIVE_SPEED_FAST);
                 RightSampleServo.setPosition(.7);
                 LeftSampleServo.setPosition(.1);
             }
@@ -169,36 +173,48 @@ public class MonstrositySampleTest extends OpMode{
                 stopAndResetEncoder();
             }
             if (stageCounter == 4) {
-                driveAtSpeed(-2, DRIVE_SPEED_SLOW);
+                turn(16);
             }
             if (stageCounter == 5) {
                 stopAndResetEncoder();
             }
+            if (stageCounter == 6) {
+                driveAtSpeed(-6, DRIVE_SPEED_FAST);
+            }
+            if (stageCounter == 7) {
+                stopAndResetEncoder();
+            }
+            if (stageCounter == 8) {
+                driveAtSpeed(-3, DRIVE_SPEED_SLOW);
+            }
+            if (stageCounter == 9) {
+                stopAndResetEncoder();
+            }
             if (path == 1) {
-                if (stageCounter == 6) {
+                if (stageCounter == 10) {
                     RightSampleServo.setPosition(.1);
                     LeftSampleServo.setPosition(.7);
                     driveAtSpeed(-4, DRIVE_SPEED_FAST);
                 }
-                if (stageCounter == 7) {
+                if (stageCounter == 11) {
                     stopAndResetEncoder();
                 }
             }
             if (path == 2) {
-                if (stageCounter == 6) {
+                if (stageCounter == 10) {
                     turn(6);
                 }
-                if (stageCounter == 7) {
+                if (stageCounter == 11) {
                     turn(0);
                     RightSampleServo.setPosition(.1);
                     LeftSampleServo.setPosition(.7);
                 }
             }
             if (path == 3) {
-                if (stageCounter == 6) {
+                if (stageCounter == 10) {
                     turn(-6);
                 }
-                if (stageCounter == 7) {
+                if (stageCounter == 11) {
                     turn(0);
                     RightSampleServo.setPosition(.1);
                     LeftSampleServo.setPosition(.7);
@@ -210,6 +226,7 @@ public class MonstrositySampleTest extends OpMode{
             telemetry.addData("FL",FL.getCurrentPosition());
             telemetry.addData("BR",BR.getCurrentPosition());
             telemetry.addData("BL",BL.getCurrentPosition());
+            telemetry.addData("HangingMotor",HangingMotor.getCurrentPosition());
             telemetry.update();
         }
     }
@@ -544,7 +561,7 @@ public class MonstrositySampleTest extends OpMode{
         else if (rightIsGold) {
             path = 2;
         }
-        if (!rightIsGold && !centerIsGold && stageCounter == 5) {
+        if (!rightIsGold && !centerIsGold && stageCounter == 6) {
             path = 3;
         }
     }

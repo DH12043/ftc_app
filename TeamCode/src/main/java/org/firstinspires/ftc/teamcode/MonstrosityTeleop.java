@@ -48,7 +48,7 @@ public class MonstrosityTeleop extends OpMode {
     private boolean scoring = false;
     private boolean sweeperEngaged = false;
     private boolean colorSensorsEngaged = true;
-    private boolean autoHangingEngaged = true;
+    private boolean autoHangingEngaged = false;
     float[] hsvValues = new float[3];
     private int centerArmPosition = -2150;
     private int crater = 30;
@@ -377,7 +377,7 @@ public class MonstrosityTeleop extends OpMode {
             else {
                 firstPressb = true;
             }
-            if (autoHangingEngaged) {
+            /*if (autoHangingEngaged) {
                 HangingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 HangingMotor.setPower(1);
                 if (gamepad2.left_stick_y < -.5) {
@@ -386,11 +386,11 @@ public class MonstrosityTeleop extends OpMode {
                 if (gamepad2.left_stick_y > .5) {
                     HangingMotor.setTargetPosition(3654);
                 }
-            }
-            else {
+            }*/
+            //else {
                 HangingMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 HangingMotor.setPower(gamepad2.left_stick_y);
-            }
+            //}
             telemetry.addData("Auto Hanging", autoHangingEngaged);
             //MarkerServo ---------------------------------------------------------------------------------------------------------
             if (gamepad2.dpad_down) {
