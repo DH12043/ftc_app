@@ -212,9 +212,9 @@ public class MonstrositySilverCraterScoringAuto extends OpMode{
             }
             // drive towards sample
             if (stageCounter == 6) {
-                driveAtSpeed(18, DRIVE_SPEED_SLOW);
-                RightSampleServo.setPosition(.8);
-                LeftSampleServo.setPosition(.05);
+                driveAtSpeed(17, DRIVE_SPEED_SLOW);
+                RightSampleServo.setPosition(.80);
+                LeftSampleServo.setPosition(0);
             }
             if (stageCounter == 7) {
                 stopAndResetEncoder();
@@ -437,22 +437,26 @@ public class MonstrositySilverCraterScoringAuto extends OpMode{
             }
             if (path == 2) {
                 if (stageCounter == 10) {
+                    driveAtSpeed(-2, DRIVE_SPEED_SLOW);
+                    stageCounter--;
                     turn(-4);
                 }
                 if (stageCounter == 11) {
-                    turn(4);
                     RightSampleServo.setPosition(.1);
                     LeftSampleServo.setPosition(.7);
+                    turn(0);
                 }
             }
             if (path == 3) {
                 if (stageCounter == 10) {
+                    driveAtSpeed(-2, DRIVE_SPEED_SLOW);
+                    stageCounter--;
                     turn(4);
                 }
                 if (stageCounter == 11) {
-                    turn(-4);
                     RightSampleServo.setPosition(.1);
                     LeftSampleServo.setPosition(.7);
+                    turn(0);
                 }
             }
             telemetry.addData("Path", path);
