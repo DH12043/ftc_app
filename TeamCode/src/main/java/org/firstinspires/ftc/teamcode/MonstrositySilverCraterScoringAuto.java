@@ -52,10 +52,10 @@ public class MonstrositySilverCraterScoringAuto extends OpMode{
 
     private boolean firstRun = true;
     private boolean firstDelayRun = true;
-    private int centerArmPosition = -2150+4800;
-    private int crater = 30+4800;
-    private int hover = -200+4800;
-    private int lander = -3100+4800;
+    private int centerArmPosition = -2150+7200;
+    private int crater = 7200;
+    private int hover = -300+7200;
+    private int lander = -4250+7200;
     private int hang = 0;
     private double fastSpeed = .5;
     private double mediumSpeed = .2;
@@ -175,6 +175,7 @@ public class MonstrositySilverCraterScoringAuto extends OpMode{
 
         }
         else {
+            //land
             if (stageCounter == 0) {
                 HangingMotor.setTargetPosition(-3650);
                 HangingMotor.setPower(-1);
@@ -187,39 +188,53 @@ public class MonstrositySilverCraterScoringAuto extends OpMode{
                 }
             }
             if (stageCounter == 1) {
-                stopAndResetEncoder();
+                HangingMotor.setTargetPosition(0);
+                HangingMotor.setPower(1);
+                if (HangingMotor.getCurrentPosition() >= -5) {
+                    HangingMotor.setPower(0);
+                    stopAndResetEncoder();
+                }
+//                stopAndResetEncoder();
             }
+            //drive toward sample
             if (stageCounter == 2) {
-                driveAtSpeed(-10, DRIVE_SPEED_FAST);
+                driveAtSpeed(-10, DRIVE_SPEED_SLOW);
             }
             if (stageCounter == 3) {
                 stopAndResetEncoder();
             }
+            //turn 180 degrees
             if (stageCounter == 4) {
-                turn(26);
+                turn(25.8);
             }
             if (stageCounter == 5) {
                 stopAndResetEncoder();
             }
+            // drive towards sample
             if (stageCounter == 6) {
-                driveAtSpeed(13, DRIVE_SPEED_FAST);
+                driveAtSpeed(18, DRIVE_SPEED_SLOW);
                 RightSampleServo.setPosition(.8);
                 LeftSampleServo.setPosition(.05);
             }
             if (stageCounter == 7) {
                 stopAndResetEncoder();
             }
+            //drive towards sample
             if (stageCounter == 8) {
-                driveAtSpeed(4, DRIVE_SPEED_SLOW);
+//                driveAtSpeed(0, DRIVE_SPEED_SLOW);
+                stageCounter++;
             }
             if (stageCounter == 9) {
-                stopAndResetEncoder();
+//                stopAndResetEncoder();
+                stageCounter++;
             }
+            //path == 1 is for center sample position
             if (path == 1) {
                 if (stageCounter == 10) {
+                    //raise sample arms
                     RightSampleServo.setPosition(.1);
                     LeftSampleServo.setPosition(.7);
-                    driveAtSpeed(4, DRIVE_SPEED_FAST);
+                    driveAtSpeed(4, DRIVE_SPEED_SLOW);
                 }
                 if (stageCounter == 11) {
                     stopAndResetEncoder();
@@ -230,10 +245,10 @@ public class MonstrositySilverCraterScoringAuto extends OpMode{
                     SorterServo.setPosition(open);
                 }
                 if (stageCounter == 13) {
-                    driveAndArm(20, DRIVE_SPEED_FAST, crater);
+                    driveAndArm(-10, DRIVE_SPEED_FAST, crater);
                 }
                 if (stageCounter == 14) {
-                    stopAndResetEncoder();
+//                    stopAndResetEncoder();
                 }
                 if (stageCounter == 15) {
                     driveAtSpeed(-18, DRIVE_SPEED_FAST);
@@ -422,20 +437,20 @@ public class MonstrositySilverCraterScoringAuto extends OpMode{
             }
             if (path == 2) {
                 if (stageCounter == 10) {
-                    turn(-2);
+                    turn(-4);
                 }
                 if (stageCounter == 11) {
-                    turn(0);
+                    turn(4);
                     RightSampleServo.setPosition(.1);
                     LeftSampleServo.setPosition(.7);
                 }
             }
             if (path == 3) {
                 if (stageCounter == 10) {
-                    turn(2);
+                    turn(4);
                 }
                 if (stageCounter == 11) {
-                    turn(0);
+                    turn(-4);
                     RightSampleServo.setPosition(.1);
                     LeftSampleServo.setPosition(.7);
                 }
@@ -629,13 +644,13 @@ public class MonstrositySilverCraterScoringAuto extends OpMode{
         }
     }
 
-    private void turn(int turningDistance) {
-        double turnPower = .5;
+    private void turn(double turningDistance) {
+        double turnPower = .2;
         //FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        int finalTurningDistance = Math.round(turningDistance * (distancePerRotation / 10000000));
+        int finalTurningDistance = (Math.round((int)(turningDistance * (distancePerRotation / 10000000))));
         //FR.setTargetPosition(finalTurningDistance);
         //FL.setTargetPosition(finalTurningDistance);
         BR.setTargetPosition(finalTurningDistance);
