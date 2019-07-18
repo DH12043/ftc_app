@@ -36,7 +36,7 @@ public class MonstrosityTeleop extends OpMode {
     private double shoulder;
     private int ShoulderOffset;
     private int armPosition = 0;
-    private double center = .7;
+    private double center = .72;
     private double left = .3;
     private double right = 1;
     private double open = 0;
@@ -47,6 +47,7 @@ public class MonstrosityTeleop extends OpMode {
     private boolean firstPressRight_Trigger = true;
     private boolean firstPressLeft_Trigger = true;
     private boolean firstPressRight_Bumper = true;
+    private boolean firstPressDpad_Down = true;
     private boolean scoring = false;
     private boolean sweeperEngaged = false;
     private boolean colorSensorsEngaged = true;
@@ -55,7 +56,7 @@ public class MonstrosityTeleop extends OpMode {
     private int centerArmPosition = -3050;
     private int crater = (0);
     private int hover = (-600);
-    private int lander = (-4400);
+    private int lander = (-4450);
     private int hang = (-7200);
     private double fastSpeed = 1;
     private double mediumSpeed = .6;
@@ -133,6 +134,20 @@ public class MonstrosityTeleop extends OpMode {
             if (gamepad2.x) {
                 ShoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
+            if (gamepad1.dpad_down) {
+                if (firstPressDpad_Down) {
+                    if (lander == -4450) {
+                        lander = -4600;
+                    }
+                    else {
+                        lander = -4450;
+                    }
+                    firstPressDpad_Down = false;
+                }
+            }
+            else {
+                firstPressDpad_Down = true;
+            }
             //Uses Encoder Positioning
             if (encoderEngaged) {
                 if (gamepad1.right_trigger > .5) {
@@ -204,7 +219,7 @@ public class MonstrosityTeleop extends OpMode {
             }
 
             //Sweeper-------------------------------------------------------------------------------------------------------------------------------
-            if (gamepad1.right_bumper) {
+            if (gamepad1.left_bumper) {
                 if (firstPressRight_Bumper) {
                     if (!sweeperEngaged) {
                         SpinnerMotor.setPower(-1);
@@ -220,7 +235,7 @@ public class MonstrosityTeleop extends OpMode {
             else {
                 firstPressRight_Bumper = true;
             }
-            if (gamepad1.left_bumper) {
+            if (gamepad1.right_bumper) {
                 SpinnerMotor.setPower(1);
                 sweeperEngaged = true;
             }
