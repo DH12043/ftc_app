@@ -92,7 +92,7 @@ public class MonstrosityTeleop extends OpMode {
         FR.setZeroPowerBehavior(BRAKE);
         FL.setZeroPowerBehavior(BRAKE);
         BR.setZeroPowerBehavior(BRAKE);
-        BR.setZeroPowerBehavior(BRAKE);
+        BL.setZeroPowerBehavior(BRAKE);
         FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -527,28 +527,90 @@ public class MonstrosityTeleop extends OpMode {
             BL.setPower(leftRearDrivePower());
             BR.setPower(rightRearDrivePower());
         }
+
     }
 
     public double scaleFactor() {
-        return Math.max
+        double factor = Math.max
                 (Math.max(Math.abs(getRightFrontDriveValue()), Math.abs(getLeftFrontDriveValue())),
                         Math.max( Math.abs(getRightRearDriveValue()), Math.abs(getLeftRearDriveValue())));
+        if (factor < 0 && factor > -0) {
+            return 0;
+        }
+        else {
+            return factor;
+        }
     }
 
     public double getLeftFrontDriveValue() {
-        return(-gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
+        double leftStickYValue = gamepad1.left_stick_y;
+        double leftStickXValue = gamepad1.left_stick_x;
+        double rightStickXValue = gamepad1.right_stick_x;
+
+        if (leftStickXValue > -.2 && leftStickXValue < .2) {
+            leftStickXValue = 0;
+        }
+        if (leftStickYValue > -.2 && leftStickYValue < .2) {
+            leftStickYValue = 0;
+        }
+        if (rightStickXValue > -.2 && rightStickXValue < .2) {
+            rightStickXValue = 0;
+        }
+        telemetry.addData("leftStickYValue", leftStickYValue);
+        telemetry.addData("leftStickXValue", leftStickXValue);
+        telemetry.addData("rightStickXValue", rightStickXValue);
+        return(-leftStickYValue + leftStickXValue + rightStickXValue);
     }
 
     public double getRightFrontDriveValue() {
-        return(gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
+        double leftStickYValue = gamepad1.left_stick_y;
+        double leftStickXValue = gamepad1.left_stick_x;
+        double rightStickXValue = gamepad1.right_stick_x;
+
+        if (leftStickXValue > -.2 && leftStickXValue < .2) {
+            leftStickXValue = 0;
+        }
+        if (leftStickYValue > -.2 && leftStickYValue < .2) {
+            leftStickYValue = 0;
+        }
+        if (rightStickXValue > -.2 && rightStickXValue < .2) {
+            rightStickXValue = 0;
+        }
+        return(leftStickYValue + leftStickXValue + rightStickXValue);
     }
 
     public double getLeftRearDriveValue() {
-        return(-gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x);
+        double leftStickYValue = gamepad1.left_stick_y;
+        double leftStickXValue = gamepad1.left_stick_x;
+        double rightStickXValue = gamepad1.right_stick_x;
+
+        if (leftStickXValue > -.2 && leftStickXValue < .2) {
+            leftStickXValue = 0;
+        }
+        if (leftStickYValue > -.2 && leftStickYValue < .2) {
+            leftStickYValue = 0;
+        }
+        if (rightStickXValue > -.2 && rightStickXValue < .2) {
+            rightStickXValue = 0;
+        }
+        return(-leftStickYValue - leftStickXValue + rightStickXValue);
     }
 
     public double getRightRearDriveValue() {
-        return(gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x);
+        double leftStickYValue = gamepad1.left_stick_y;
+        double leftStickXValue = gamepad1.left_stick_x;
+        double rightStickXValue = gamepad1.right_stick_x;
+
+        if (leftStickXValue > -.2 && leftStickXValue < .2) {
+            leftStickXValue = 0;
+        }
+        if (leftStickYValue > -.2 && leftStickYValue < .2) {
+            leftStickYValue = 0;
+        }
+        if (rightStickXValue > -.2 && rightStickXValue < .2) {
+            rightStickXValue = 0;
+        }
+        return(leftStickYValue - leftStickXValue + rightStickXValue);
     }
 
     public double leftFrontDrivePower() {
