@@ -9,9 +9,9 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-@Autonomous
-
+@Disabled
 public class CRIsilverCraterScoringAuto extends OpMode{
     private DcMotor ShoulderMotor1;
     private DcMotor RightDrive;

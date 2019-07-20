@@ -23,7 +23,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
-@TeleOp(name="CameraTest", group="LinearOpMode")
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+@Disabled
 public class CameraTest extends BasicOpMode_Linear {
 
     private static final String VUFORIA_KEY = "AddedVuforia";

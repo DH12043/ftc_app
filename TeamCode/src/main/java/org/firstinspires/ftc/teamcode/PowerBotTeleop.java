@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
-
-@TeleOp
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+@Disabled
 public class PowerBotTeleop extends OpMode {
     private DcMotor ShoulderMotor1;
     private DcMotor RightDrive;

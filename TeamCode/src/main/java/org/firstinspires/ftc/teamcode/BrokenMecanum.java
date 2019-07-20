@@ -4,8 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import java.lang.*;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-
+@Disabled
 public class BrokenMecanum extends OpMode {
 
     private DcMotor _leftFrontDrive;

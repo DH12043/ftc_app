@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
-@Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+@Disabled
 
 public class CRIgold1CrossAuto extends OpMode{
     private DcMotor ShoulderMotor1;

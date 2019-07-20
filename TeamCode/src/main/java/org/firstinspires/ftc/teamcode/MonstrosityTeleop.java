@@ -12,6 +12,8 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
+
 @TeleOp
 public class MonstrosityTeleop extends OpMode {
     private DcMotor ShoulderMotor;
@@ -56,7 +58,7 @@ public class MonstrosityTeleop extends OpMode {
     private int centerArmPosition = -3050;
     private int crater = (0);
     private int hover = (-600);
-    private int lander = (-4450);
+    private int lander = (-4200);
     private int hang = (-7200);
     private double fastSpeed = 1;
     private double mediumSpeed = .6;
@@ -87,6 +89,15 @@ public class MonstrosityTeleop extends OpMode {
         FL = hardwareMap.dcMotor.get("FL");
         BR = hardwareMap.dcMotor.get("BR");
         BL = hardwareMap.dcMotor.get("BL");
+        FR.setZeroPowerBehavior(BRAKE);
+        FL.setZeroPowerBehavior(BRAKE);
+        BR.setZeroPowerBehavior(BRAKE);
+        BR.setZeroPowerBehavior(BRAKE);
+        FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         SorterServo.setPosition(center);
         MarkerServo.setPosition(.1);
         RightSampleServo.setPosition(.1);
@@ -136,11 +147,11 @@ public class MonstrosityTeleop extends OpMode {
             }
             if (gamepad1.dpad_down) {
                 if (firstPressDpad_Down) {
-                    if (lander == -4450) {
-                        lander = -4600;
+                    if (lander == -4200) {
+                        lander = -4000;
                     }
                     else {
-                        lander = -4450;
+                        lander = -4200;
                     }
                     firstPressDpad_Down = false;
                 }
