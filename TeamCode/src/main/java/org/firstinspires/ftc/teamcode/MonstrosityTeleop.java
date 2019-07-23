@@ -38,7 +38,7 @@ public class MonstrosityTeleop extends OpMode {
     private double shoulder;
     private int ShoulderOffset;
     private int armPosition = 0;
-    private double center = .72;
+    private double center = .73;
     private double left = .3;
     private double right = 1;
     private double open = 0;
@@ -58,7 +58,7 @@ public class MonstrosityTeleop extends OpMode {
     private int centerArmPosition = -3050;
     private int crater = (0);
     private int hover = (-600);
-    private int lander = (-4200);
+    private int lander = (-4400);
     private int hang = (-7200);
     private double fastSpeed = 1;
     private double mediumSpeed = .6;
@@ -147,17 +147,23 @@ public class MonstrosityTeleop extends OpMode {
             }
             if (gamepad1.dpad_down) {
                 if (firstPressDpad_Down) {
-                    if (lander == -4200) {
-                        lander = -4000;
+                    if (lander == -4400) {
+                        lander = -4100;
                     }
                     else {
-                        lander = -4200;
+                        lander = -4400;
                     }
                     firstPressDpad_Down = false;
                 }
             }
             else {
                 firstPressDpad_Down = true;
+            }
+            if (gamepad1.dpad_right) {
+                crater = 20;
+            }
+            else if (gamepad1.dpad_left) {
+                crater = 0;
             }
             //Uses Encoder Positioning
             if (encoderEngaged) {
@@ -317,6 +323,13 @@ public class MonstrosityTeleop extends OpMode {
                     telemetry.addLine("Saw yellow:  ")
                             .addData(" left is yellow", leftIsYellow)
                             .addData("goldness", "%.3f", goldnessLeft);
+
+                    if ((colorsLeft.red > colorsLeft.blue*3.5) || (colorsRight.red > colorsRight.blue*3.5)) {
+                        telemetry.addData("WARNING", "RED PLATNIUM COLLECTED!");
+                    }
+                    if ((colorsLeft.blue > colorsLeft.red*3.5) || (colorsRight.blue > colorsRight.red*3.5)) {
+                        telemetry.addData("WARNING", "BLUE PLATNIUM COLLECTED!");
+                    }
                 }
                 if (gamepad1.b) { // drop gold
                     telemetry.addLine("B Yellow:  ")

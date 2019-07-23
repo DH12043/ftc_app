@@ -172,9 +172,9 @@ public class MonstrositySimpleLandCraterAuto extends OpMode{
         else {
             //land
             if (stageCounter == 0) {
-                HangingMotor.setTargetPosition(-9672);
+                HangingMotor.setTargetPosition(-9690);
                 HangingMotor.setPower(-1);
-                if (HangingMotor.getCurrentPosition() <= -9650) {
+                if (HangingMotor.getCurrentPosition() <= -9660) {
                     HangingMotor.setPower(0);
                     stopAndResetEncoder();
                 }
